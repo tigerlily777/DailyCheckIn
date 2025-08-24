@@ -15,4 +15,4 @@ Aug 22 - restart with kotlin daily exercise -d1 and d2
 
 Aug 23 - forgot to update because of watching 凡人修仙传
 
-Aug 24 - continue with kotlin daily 
+Aug 24 - continue with kotlin daily - extend function exercise
