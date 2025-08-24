@@ -10,3 +10,5 @@ Jul 2 - Modifier in compose
 Jul 3 - Button composable
 
 Pause updating for being settled in new job ...
+
+Aug 22 - restart with kotlin daily exercise -d1 and d2
