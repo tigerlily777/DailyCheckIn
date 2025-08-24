@@ -11,7 +11,7 @@ Jul 3 - Button composable
 
 Pause updating for being settled in new job ...
 
-Aug 22 - restart with kotlin daily exercise -d1 - data class copy and d2 filter() and map()
+Aug 22 - restart with kotlin daily exercise - d1 data class copy and d2 filter() and map()
 
 Aug 23 - forgot to update because of watching 凡人修仙传
 
