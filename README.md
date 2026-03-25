@@ -20,3 +20,7 @@ Aug 24 - continue with kotlin daily - extend function exercise
 Oct 26 - Android 4 components (need to add wiki links)
 
 Oct 28/29 - Some kotlin interview questions (need to add wiki links)
+
+
+2026
+25/Mar - Side effect about compose
