@@ -334,3 +334,149 @@ List → Details → Back
 
 🧠 “读取 state → 记录依赖 → state 变 → 重新执行”
 
+## The lifecycle of viewmodel 
+🧠 一、ViewModel 到底“什么时候活 / 什么时候死”？
+
+先给你一句定海神针：
+
+✅ ViewModel 的生命周期 ≠ Composable 生命周期
+✅ 它跟的是 ViewModelStoreOwner
+
+⸻
+
+🎯 谁是 ViewModelStoreOwner？
+
+常见有三个：
+	•	Activity
+	•	Fragment
+	•	Navigation 的 BackStackEntry（最重要！）
+
+⸻
+
+🧩 在 Navigation Compose 里（你现在的场景）
+```
+composable("list") {
+    val vm: ListViewModel = viewModel()
+}
+```
+👉 这个 ViewModel 属于：
+
+🧱 当前这个 navigation entry（list 这页）
+
+⸻
+
+🔥 那什么时候会被销毁？
+
+👉 非常关键一句：
+
+❗当这个 screen 从 back stack 被移除时
+
+⸻
+
+🧪 举几个你能感知的例子
+
+✔ 正常来回跳 List → Details → Back
+👉 List 还在 back stack 里
+👉 ViewModel ✅ 还活着
+
+❌ 被 pop 掉 navController.popBackStack("list", inclusive = true)
+👉 List 被干掉
+👉 ViewModel 💀 销毁
+
+❌ 进程被杀（系统回收）
+👉 ViewModel 💀 也没了
+🧠 一个超好记的类比
+
+你可以把：
+	•	Navigation back stack = 🏨 酒店房间
+	•	ViewModel = 🧳 你放在房间里的行李
+
+👉 房间还在 → 行李还在
+👉 房间被退掉 → 行李没了
+
+❗二、你问的“scope 写错”是什么意思？
+
+这个是很多人踩坑的地方，你问得非常好。
+🎯 正确方式（推荐）val vm: ListViewModel = viewModel()
+
+👉 默认 scope：当前 screen（NavBackStackEntry）
+
+⸻
+
+⚠️ 错误 / 容易踩坑的方式
+
+❶ 每个 screen 都拿自己的 VM（但你以为是共享的）
+// ListScreen
+val vm: MyVM = viewModel()
+
+// DetailScreen
+val vm: MyVM = viewModel()
+
+👉 ❗这是两个不同的 ViewModel！
+
+👉 结果：
+	•	List 请求了一次 API
+	•	Detail 又请求一次
+
+💥 重复请求
+
+⸻
+
+❷ 应该共享但没共享（真正的“scope 写错”）
+
+比如你其实想：
+
+👉 List 和 Detail 共享数据
+
+但你没这样写：
+```
+val parentEntry = remember(navController) {
+    navController.getBackStackEntry("list")
+}
+val vm: MyVM = viewModel(parentEntry)
+```
+👉 结果就是：
+
+❗ViewModel scope 选错了 → 生命周期不对 → 行为异常
+
+🔥 三、你问的 init vs LaunchedEffect（核心 battle）
+
+你观察得非常细：
+
+init 是构造后执行
+LaunchedEffect 是 Composable 里执行
+
+👉 ✔ 完全正确
+🎯 推荐模式（非常重要）
+```
+class ListViewModel : ViewModel() {
+    init {
+        loadData()
+    }
+}
+```
+👉 为什么推荐？
+
+因为：
+
+✅ 数据生命周期交给 ViewModel 管
+
+⚠️ 你现在的写法（常见坑）
+```
+LaunchedEffect(Unit) {
+    vm.loadData()
+}
+```
+👉 看起来没问题，但有坑👇
+
+⸻
+
+💣 这个坑到底在哪？（重点）
+
+👉 Composable 不是只执行一次！
+
+它可能会：
+	•	重新进入 Composition
+	•	被销毁再创建
+	•	navigation 切回来时重新执行
+
