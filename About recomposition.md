@@ -809,3 +809,46 @@ fun ListScreen(
 	4.	StateFlow emit 新值 → 观察它的 Composable 会 recomposition
 	•	即使 List 内部元素变化，也要用新对象 (copy) 才触发 recomposition。
 
+Question:
+state 从 empty list → 有内容
+	•	_uiState.value 从 UiState(emptyList()) → UiState(listOf("A","B","C"))
+这为什么是 state 的变化啊，这不是list里面的value发生变化吗
+Answer:
+🧠 核心概念
+
+Compose 判断 state 是否变化，不是看里面的内容，而是看 “引用有没有变”。
+	•	StateFlow / mutableStateOf 观察的是 整个对象的引用
+	•	只要你给它赋了一个新对象 → Compose 会感知到 → 触发 recomposition
+🔍 回到你的例子_uiState.value = UiState(listOf("A", "B", "C"))
+关键点：
+	1.	初始值：UiState(emptyList())
+	2.	新值：UiState(listOf("A","B","C"))
+	✅ 两者是 不同的对象（不同引用）
+
+⸻
+
+❌ 不是“List 内部值变了”
+	•	如果你只是修改了 原来的 list：_uiState.value.items.add("A")
+
+		•	这时候 _uiState.value 的引用没变
+	•	Compose 不会感知 → 不会 recomposition
+
+⸻
+
+✅ 正确的触发方式
+	•	创建 新对象（或者新 list）
+	•	赋值给 _uiState.value
+	•	Compose 观察到引用变 → recomposition 发生
+
+	💡 类比
+
+把 state 想象成一个“包裹盒子”：
+	•	初始包裹：空 list
+	•	新包裹：包含 ABC 的 list
+
+不管你是不是把盒子里面的东西换了，只要盒子没换，Compose 看不到变化
+只有换了一个盒子 → Compose 才知道“我需要重新画 UI”
+所以，	
+_uiState.value = UiState(listOf("A","B","C"))
+•	UiState 对象是新的
+	•	✅ 这就是 state 变化 → 会触发 recomposition
