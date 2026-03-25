@@ -644,4 +644,111 @@ fun Screen() {
 ```
 👉 点击按钮一次
 
+### Answers
+
+第 1 题 ✅
+	•	你的回答完全正确
+	•	💡 补充一点：只有 mutableStateOf 才会被 Compose 观察；remember + mutableStateOf 才能保证 state 在 recomposition 之间存活
+
+⸻
+
+第 2 题 ✅
+	•	完全正确
+	•	💡 核心就是：普通变量不会被 Compose 观察
+	•	所以点击按钮，count++ 改了值，但 Composable 并不知道 → 不会重新执行
+
+⸻
+
+第 3 题 ✅
+	•	对，你抓住了重点：只有 Parent 观察了 count
+	•	Child 没有任何依赖，所以不会被重执行
+	•	💡 这就是 Compose 的精确打击：只重绘用到 state 的部分
+
+⸻
+
+第 4 题 ✅
+	•	完全正确
+	•	补充：Child 也会被 recomposition，因为它是 Child(count)，参数 count 变了 → Child Composable 也被执行
+	•	👉 这就是参数传递也会触发 recomposition 的典型场景
+
+⸻
+
+第 5 题 ✅
+	•	正确！这就是“内部对象变了，但引用没变”的坑
+	•	💡 补充：如果你想让这个 recomposition 发生，需要写成：
+	state = state.copy(count = state.count + 1)
+	•	这样 state 是新对象，Compose 才会感知到 → recomposition 发生
+
+
+
+## Advanced
+🎯 规则
+
+我会给你一个完整的 screen，你回答：
+
+1️⃣ 点击按钮 / navigate / back 时，会不会 recomposition
+2️⃣ 会不会重新请求 API
+3️⃣ 为什么
+
+你尽量像之前那样写出理由，
+```
+data class UiState(val items: List<String> = emptyList())
+
+class ListViewModel : ViewModel() {
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState
+
+    init {
+        loadData()
+    }
+
+    fun loadData() {
+        viewModelScope.launch {
+            delay(1000) // 模拟网络请求
+            _uiState.value = UiState(listOf("A", "B", "C"))
+        }
+    }
+
+    fun addItem(item: String) {
+        _uiState.value = _uiState.value.copy(items = _uiState.value.items + item)
+    }
+}
+
+@Composable
+fun ListScreen(
+    viewModel: ListViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Column {
+        uiState.items.forEach { item ->
+            Text(item, modifier = Modifier.clickable {
+                // Navigate to details
+            })
+        }
+        Button(onClick = { viewModel.addItem("D") }) {
+            Text("Add D")
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        println("LaunchedEffect called")
+    }
+}
+```
+🔥 场景：
+	1.	App 启动 → ListScreen 首次显示
+	2.	点击按钮 Add D
+	3.	点击其中一个 item → navigate 到 DetailsScreen（假设是普通 Nav）
+	4.	Back 回到 ListScreen
+
+⸻
+
+💡 问题：
+
+1️⃣ 每个步骤，会不会发生 recomposition？
+2️⃣ 每个步骤，会不会调用 loadData()？
+3️⃣ 每个步骤，LaunchedEffect 会不会执行？
+4️⃣ 原因是什么？
+
 
