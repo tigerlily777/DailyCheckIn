@@ -535,3 +535,113 @@ LaunchedEffect(userId)
 
 💥 每来一个客人（recomposition）就喊一次
 
+## Tests
+
+🎯 规则（很重要）
+
+每一题你回答：
+1️⃣ 会不会发生 recomposition？
+2️⃣ 哪一部分会？
+3️⃣ 为什么？
+
+🧪 第 1 题（热身）
+```
+@Composable
+fun Counter() {
+    var count by remember { mutableStateOf(0) }
+
+    Column {
+        Text("Count: $count")
+        Button(onClick = { count++ }) {
+            Text("Add")
+        }
+    }
+}
+```
+👉 点击按钮一次
+
+🧪 第 2 题
+```
+@Composable
+fun Counter() {
+    var count = 0
+
+    Column {
+        Text("Count: $count")
+        Button(onClick = { count++ }) {
+            Text("Add")
+        }
+    }
+}
+```
+👉 点击按钮一次
+
+⸻
+
+🧪 第 3 题（关键理解：谁在读 state）
+```
+@Composable
+fun Parent() {
+    var count by remember { mutableStateOf(0) }
+
+    Column {
+        Button(onClick = { count++ }) {
+            Text("Add")
+        }
+        Child()
+    }
+}
+
+@Composable
+fun Child() {
+    Text("Hello")
+}
+```
+👉 点击按钮一次
+
+⸻
+
+🧪 第 4 题
+```
+@Composable
+fun Parent() {
+    var count by remember { mutableStateOf(0) }
+
+    Column {
+        Button(onClick = { count++ }) {
+            Text("Add")
+        }
+        Child(count)
+    }
+}
+
+@Composable
+fun Child(count: Int) {
+    Text("Count: $count")
+}
+```
+👉 点击按钮一次
+
+⸻
+
+🧪 第 5 题（面试高频坑🔥）
+```
+data class UiState(val count: Int)
+
+@Composable
+fun Screen() {
+    var state by remember { mutableStateOf(UiState(0)) }
+
+    Column {
+        Text("Count: ${state.count}")
+        Button(onClick = {
+            state.count + 1
+        }) {
+            Text("Add")
+        }
+    }
+}
+```
+👉 点击按钮一次
+
+
