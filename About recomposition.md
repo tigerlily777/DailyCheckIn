@@ -270,3 +270,67 @@ uiState
 🧩 举个超级关键的例子（很多人卡死在这）
 
 ❌ 错误写法（不会触发 recomposition）
+```
+data class UiState(val count: Int)
+
+uiState.count += 1
+```
+👉 为什么不行？
+
+因为：
+
+👉 对象没变，只是里面的值变了
+
+Compose 看的是：这个“盒子”有没有换,不是里面的东西
+✅ 正确写法
+_uiState.value = uiState.copy(count = uiState.count + 1)
+👉 这次：
+
+💥 新对象 → state 变化 → recomposition
+🧠 一个非常关键的直觉（你要建立这个）
+
+👉 Compose 判断的是：
+
+❗“引用有没有变”（是不是新对象）
+
+⸻
+
+🧩 再用一个生活类比（保证你记住）
+
+你可以把 state 想成：
+
+👉 📦 一个“包裹”
+
+⸻
+
+	•	改包裹里面的东西（不换盒子）
+👉 Compose：🙈 看不见
+	•	换一个新包裹
+👉 Compose：👀 发现了！更新 UI！
+
+⸻
+
+🎯 回到你最初的那个场景
+
+List → Details → Back
+
+👉 会不会 recomposition，取决于：
+
+✔ List 用的 state 有没有变
+
+比如：val list by viewModel.list.collectAsState()
+
+情况 1：数据没变
+
+👉 不 recomposition
+
+情况 2：你在 Details 改了数据 viewModel.updateItem(...)
+👉 Flow emit 新值
+💥 List recomposition
+
+🚀 最后一层理解
+
+👉 Compose 本质是：
+
+🧠 “读取 state → 记录依赖 → state 变 → 重新执行”
+
