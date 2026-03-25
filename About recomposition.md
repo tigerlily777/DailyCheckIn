@@ -1,4 +1,4 @@
-About recomposition
+## About recomposition
 
 Usecase: list - listitem 
 假如我的app有main page，是一个list，每个list item点一下会navigate到对应的details screen, details screen上有一个按钮，点了可以弹出一个bottomsheet。
@@ -148,3 +148,125 @@ Recomposition 本质上就是：
 👉 “精确打击”
 
 ⸻
+
+## About state 
+
+👉 state = 能影响 UI 显示的数据
+
+只要这个数据一变，UI 就可能要变。
+
+⸻
+
+🎯 但重点来了：不是所有数据都是 state
+
+你问得非常关键：
+
+state 是不是 ViewModel 里的 mutableState？
+
+👉 答案是：
+
+❌ 不仅仅是
+✅ 所有被 Compose“观察”的数据，才是 state
+
+🧩 我们分三层讲清楚（非常重要）
+
+🥇 第一层：Compose “看得见”的 state（核心）
+
+只有这些，才会触发 recomposition：
+
+1️⃣ mutableStateOf
+```
+var text by remember { mutableStateOf("") }
+```
+👉 改 text
+💥 一定 recomposition
+
+2️⃣ StateFlow / Flow（通过 collect）
+```
+val uiState by viewModel.uiState.collectAsState()
+```
+👉 Flow emit 新值
+💥 recomposition
+
+3️⃣ LiveData
+```
+val data by viewModel.liveData.observeAsState()
+```
+👉 数据变化
+💥 recomposition
+
+👉 重点一句：
+
+✅ 只有“被 collect / observe 的数据”，才算 Compose 的 state
+
+⸻
+🧠 第二层：那普通变量算不算？
+```
+var count = 0
+```
+
+👉 你改它：
+
+❌ 不会触发 recomposition
+👉 因为 Compose 根本“不知道它变了”
+
+⸻
+
+👉 这就像：
+	•	state = “被摄像头盯着的人”
+	•	普通变量 = “躲在角落的人”
+
+⸻
+
+🔥 回答你核心问题
+
+❓“state 是谁的 state？”
+
+👉 不是 ViewModel 的
+👉 也不是 Compose 的
+
+👉 是“UI 正在使用的那份数据”
+
+举个你现在能秒懂的例子👇
+```
+@Composable
+fun DetailScreen(viewModel: VM) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Text(uiState.name)
+}
+```
+👉 这里的 state 是：
+```
+uiState
+```
+不是 ViewModel 本身
+而是：
+
+✨ UI 正在“读”的这份数据
+🎯 那 recomposition 是怎么触发的？
+
+👉 核心机制是：
+
+📡 Compose 会“订阅”你读取的 state
+
+⸻
+
+🧠 想象一下：
+
+当你写：Text(uiState.name)
+系统偷偷做了这件事：“我盯着 uiState.name，一旦它变，我就重新执行这段 UI”
+
+🔥 那你问的关键问题来了：
+
+❓我怎么“控制 state 变没变”？
+
+👉 本质是：
+
+👉 你控制“有没有发出新值”
+
+⸻
+
+🧩 举个超级关键的例子（很多人卡死在这）
+
+❌ 错误写法（不会触发 recomposition）
