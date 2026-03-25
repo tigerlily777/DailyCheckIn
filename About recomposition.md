@@ -479,4 +479,59 @@ LaunchedEffect(Unit) {
 	•	重新进入 Composition
 	•	被销毁再创建
 	•	navigation 切回来时重新执行
+🧪 举个真实会发生的情况
+
+场景：List → Details → Back
+如果 ListScreen 被重新 compose：
+
+👉 LaunchedEffect(Unit) 可能会再执行一次
+
+💥 → 再 call API
+❗更隐蔽的 bug
+
+1️⃣ 屏幕旋转
+
+👉 Activity 重建
+👉 Composable 重新执行
+👉 LaunchedEffect 再跑
+
+💥 再请求一次 API
+2️⃣ 参数变化
+LaunchedEffect(userId)
+👉 userId 变了
+💥 再请求
+
+⸻
+
+🎯 所以核心原则是：
+
+❗UI 不负责决定“什么时候加载数据”
+
+👉 UI 只负责：
+
+🖼️ 展示数据
+
+⸻
+
+👉 数据什么时候加载，由谁决定？
+✅ ViewModel
+
+🧠 再用一个类比（你会一下记住）
+	•	ViewModel = 🍳 厨师
+	•	Composable = 🍽️ 服务员
+
+⸻
+
+👉 正确方式：
+
+🍳 厨师决定什么时候做菜
+🍽️ 服务员只是端上来
+
+⸻
+
+👉 错误方式（你现在的）：
+
+🍽️ 服务员说：“我觉得你该做菜了！”
+
+💥 每来一个客人（recomposition）就喊一次
 
