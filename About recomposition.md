@@ -1,15 +1,16 @@
 ## About recomposition
 
-Usecase: list - listitem 
-假如我的app有main page，是一个list，每个list item点一下会navigate到对应的details screen, details screen上有一个按钮，点了可以弹出一个bottomsheet。
-那我从list上，点击一个item进入details，当我在details page 点back button又回来list page的时候，recomposation发生了吗？
+### Usecase: list - listitem 
+If my app's home page is a list, each list item takes user to cooresponding details page. There's a button on details page, which will show a bottom sheet on clicking.
+When I click any list item to nav to details screen, and nav back by clicking back button on details screen, does recomposation happen?
 
-🧠 Recomposition 是什么（用生活类比）
 
-想象你的 UI 是一张“智能白板”。
-	•	你第一次画 → 叫 Composition（初次绘制）
-	•	之后你改了某一小块 → 系统不会擦掉整块重画
-👉 只会局部重画那一小块
+🧠 What is Recomposition? 
+
+Imaging the UI is an intelligent white board.
+	•	first drawing -> first time compose
+	•	update some details -> the board won't draw the whole picture again, instead, only a small piece with details will be drew.
+
 
 👉 这个“局部重画”，就是 Recomposition
 
@@ -17,32 +18,29 @@ Usecase: list - listitem
 
 ✅ 用一句人话总结
 
-👉 Recomposition = 因为 state 变化，导致某些 Composable 被重新执行，从而更新 UI
+👉 Recomposition = UI Due to the **change of state**, some Composable are running again, and the UI is getting updated.
 
 不是“页面刷新”，不是“重新加载”，而是：
 
 ✨ “哪儿变了，改哪儿”
 
-🔥 回到你这个具体场景（非常好！）
+🔥 Back to the usecase above
 
 你的流程是：
 
-List Page → 点击 item → Details Page
-Details Page → 点 back → 回 List Page
+List Page → click item → Details Page
+Details Page → click back → back to List Page
 
-你问：
+❓Question：
 
-👉 回到 list page 的时候，有没有 recomposition？
+👉 When user back to the list page，does recomposition happen？
 
-⸻
+🎯 It depends!
 
-🎯 正确答案：分情况！（重点来了）
-
-我们一层一层拆👇
 
 ⸻
 
-🧩 情况一：List 页面还“活着”（常见）
+🧩 Scenario 1：List is still **alive**
 
 如果你用的是：
 	•	Navigation Compose（默认行为）
