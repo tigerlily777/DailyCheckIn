@@ -240,9 +240,7 @@ _uiState.value = uiState.copy(count = uiState.count + 1)
 
 List → Details → Back
 
-👉 会不会 recomposition，取决于：
-
-✔ List 用的 state 有没有变
+👉 会不会 recomposition，取决于：✔ List 用的 state 有没有变
 
 比如：val list by viewModel.list.collectAsState()
 
@@ -254,11 +252,9 @@ List → Details → Back
 👉 Flow emit 新值
 💥 List recomposition
 
-🚀 最后一层理解
+3. 最后一层理解
 
-👉 Compose 本质是：
-
-🧠 “读取 state → 记录依赖 → state 变 → 重新执行”
+👉 **Compose 本质是：🧠 “读取 state → 记录依赖 → state 变 → 重新执行”**
 
 ## The lifecycle of viewmodel 
 🧠 一、ViewModel 到底“什么时候活 / 什么时候死”？
