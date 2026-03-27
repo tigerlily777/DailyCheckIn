@@ -8,25 +8,23 @@ When I click any list item to nav to details screen, and nav back by clicking ba
 🧠 What is Recomposition? 
 
 Imaging the UI is an intelligent white board.
-	•	first drawing -> first time compose
-	•	update some details -> the board won't draw the whole picture again, instead, only a small piece with details will be drew.
+- first drawing -> first time compose
+- update some details -> the board won't draw the whole picture again, instead, only a small piece with details will be drew.
 
 
-👉 这个“局部重画”，就是 Recomposition
+👉 "Only draw some parts of the picture" --> is called Recomposition
 
 ⸻
 
-✅ 用一句人话总结
+✅ In one word:
 
 👉 Recomposition = UI Due to the **change of state**, some Composable are running again, and the UI is getting updated.
 
 不是“页面刷新”，不是“重新加载”，而是：
 
-✨ “哪儿变了，改哪儿”
+✨ Only re-draw the part that needs updating
 
 🔥 Back to the usecase above
-
-你的流程是：
 
 List Page → click item → Details Page
 Details Page → click back → back to List Page
@@ -42,50 +40,41 @@ Details Page → click back → back to List Page
 
 🧩 Scenario 1：List is still **alive**
 
-如果你用的是：
-	•	Navigation Compose（默认行为）
-	•	或者 Fragment + ComposeView
+If you're using
+- Navigation Compose
+- Or Fragment + ComposeView
 
-那么：
+Then:
 
-👉 List 页面其实 没有被销毁
-
-它只是：
-
-💤 被放到后台（类似“最小化”）
+👉 List screen is not getting destoyed. It's just running at the background, like "minimised"
 
 ⸻
 
-那返回时发生什么？
+Then what happend when navigating back?
 
-👉 不会重新 Composition
-👉 也不一定发生 Recomposition
+✔ If state has **NOT** changed
+👉 Nothing will happen. Just reuse the UI
 
-✔ 如果 state 没变
-👉 什么都不会发生（UI直接复用）
-
-✔ 如果 state 变了（比如数据刷新）
-👉 才会发生 Recomposition
+✔ If state **HAS** changed（data refreshing）
+👉 Recomposition will happen
 
 ⸻
 
-✅ 所以你的问题答案是：
+✅ So the answer is：
 
-👉 “回到 list page ≠ 一定发生 recomposition”
+👉 “back to the list page ≠ recomposition”
 
 ⸻
 
-🧩 情况二：List 页面被销毁了
+🧩 Scenario 2：List page gets destroyed
 
-比如你：
+e.g：
 	•	popBackStack 彻底清掉
-	•	或者 Activity 被重建（旋转 / 内存回收）
+	•	Or Activity is recreated（rotate screen / memory recycled）
 
-那么：
+Then：
 
-👉 再回来时是：
-
-❗重新 Composition（不是 Recomposition）
+👉 When coming back：❗trigger another Composition（NOT Recomposition）
 
 ⸻
 
