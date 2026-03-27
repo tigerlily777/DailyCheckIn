@@ -723,71 +723,18 @@ fun ListScreen(
     }
 }
 ```
-🔥 场景：
-	1.	App 启动 → ListScreen 首次显示
-	2.	点击按钮 Add D
-	3.	点击其中一个 item → navigate 到 DetailsScreen（假设是普通 Nav）
-	4.	Back 回到 ListScreen
+
+| Usecase 1 |  recomposition? | loadData() called | LaunchedEffect |
+|---|---|---|---|
+| Launch app -> First time show list screen | ✅ First time running compose, not RE but compose | ✅ | ✅ _uiState.value 从 UiState(emptyList()) → UiState(listOf("A","B","C")) |
+| Click on Add D| ✅ _uiState.value 被 addItem() 改了，Compose 观察到 StateFlow emit 新值 → 依赖它的 Composable 重新执行  | ❌ viewmodel is still alive | ❌ because of unit
+| Click on a list item to nav to details screen | ❌ List screen is still in backstack, and no state change | ❌ | ❌ omposable 没被销毁 → Unit 也没变 → LaunchedEffect 不执行
+| Nav back to list screen | ❌ list screen is from back stack, no state change, no recompose UI | ❌ Viewmodel still alive | ❌ LaunchedEffect 只会在 Composable 首次 Composition 时执行，返回 backstack 只是恢复显示，Composable 本身并没有被销毁 → Unit 没变 → LaunchedEffect 不会再执行
 
 ⸻
 
-💡 问题：
-
-1️⃣ 每个步骤，会不会发生 recomposition？
-2️⃣ 每个步骤，会不会调用 loadData()？
-3️⃣ 每个步骤，LaunchedEffect 会不会执行？
-4️⃣ 原因是什么？
-
-场景 1：App 启动 → ListScreen 首次显示
-	•	Recomposition ✅ 会发生
-	•	解释：Composable 首次执行，UI 组件需要根据初始 state 渲染，所以第一次其实也是 Composition，不是 recomposition，但这个阶段可以理解为 UI 执行了。
-	•	loadData() ✅ 会调用
-	•	解释：ViewModel 刚创建，init { loadData() } 执行。
-	•	state 从 empty list → 有内容
-	•	你说“并不是 state 改变，其实不完全对”：
-	•	_uiState.value 从 UiState(emptyList()) → UiState(listOf("A","B","C"))
-	•	💥 这确实是 state 变化，会触发 recomposition（或者说首次 render 后第二次 render）。
-	•	LaunchedEffect(Unit) ✅ 会执行
-	•	解释：首次 Composition 执行，会触发一次。
-
-⸻
-
-场景 2：点击按钮 Add D
-	•	Recomposition ✅ 会发生
-	•	解释：_uiState.value 被 addItem() 改了，Compose 观察到 StateFlow emit 新值 → 依赖它的 Composable 重新执行。
-	•	loadData() ❌ 不会调用
-	•	解释：ViewModel 没被销毁，init 只执行过一次。
-	•	LaunchedEffect(Unit) ❌ 不会执行
-	•	解释：Unit 没变 → LaunchedEffect 只执行一次。
-
-👍 完全正确。
-
-⸻
-
-场景 3：点击某个 item → navigate 到 DetailsScreen
-	•	Recomposition ❌ 不会发生
-	•	解释：ListScreen 虽然仍然在 backstack，但没有 state 改变 → 不需要 recomposition。
-	•	loadData() ❌ 不会调用
-	•	解释：ViewModel 已经存在，不会再 init。
-	•	LaunchedEffect(Unit) ❌ 不会执行
-	•	解释：Composable 没被销毁 → Unit 也没变 → LaunchedEffect 不执行。
-
-👍 正确。
-
-⸻
-
-场景 4：Back 回到 ListScreen
-	•	Recomposition ❌ 不会发生
-	•	解释：ListScreen 从 backstack 回来，本身的 state 没变，UI 不需要重新执行。
-	•	loadData() ❌ 不会调用
-	•	解释：ViewModel 还在 → init 不会再次执行。
-	•	LaunchedEffect(Unit) ❌ 不会执行
-	•	✅ 你不确定的地方：LaunchedEffect 只会在 Composable 首次 Composition 时执行，返回 backstack 只是恢复显示，Composable 本身并没有被销毁 → Unit 没变 → LaunchedEffect 不会再执行。
-
-⸻
-
-✅ 总结几个核心点
-	1.	Recomposition ≠ 页面显示
+✅ **KEY WORDS**
+	1.	Recomposition ≠ show screen
 	•	页面显示/Navigation 切换，不代表 recomposition，只有 state 改变才触发。
 	2.	ViewModel 生命周期决定 loadData 执行次数
 	•	init 只在第一次创建时执行。
