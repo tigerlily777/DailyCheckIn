@@ -306,11 +306,11 @@ composable("list") {
 
 🧠 一个超好记的类比
 你可以把：
-	•	Navigation back stack = 🏨 酒店房间
-	•	ViewModel = 🧳 你放在房间里的行李
+- Navigation back stack = 🏨 A hotel room
+- ViewModel = 🧳 Luggage in the room
 
-👉 房间还在 → 行李还在
-👉 房间被退掉 → 行李没了
+👉 Room still there → Luggage still there
+👉 Room gone → Luggage gone
 
 ❗2️⃣ 你问的“scope 写错”是什么意思？
 
@@ -384,11 +384,9 @@ LaunchedEffect(Unit) {
     vm.loadData()
 }
 ```
-👉 WHY?
-
 ⸻
 
-💣 这个坑到底在哪？（重点）
+💣 WHY?
 
 👉 Composable 不是只执行一次！
 
@@ -404,6 +402,7 @@ LaunchedEffect(Unit) {
 👉 LaunchedEffect(Unit) 可能会再执行一次
 
 💥 → 再 call API
+
 ❗更隐蔽的 bug
 
 1️⃣ 屏幕旋转
@@ -411,48 +410,25 @@ LaunchedEffect(Unit) {
 👉 Activity 重建
 👉 Composable 重新执行
 👉 LaunchedEffect 再跑
-
 💥 再请求一次 API
-2️⃣ 参数变化
+
+2️⃣ parameter changes
 LaunchedEffect(userId)
 👉 userId 变了
-💥 再请求
+💥 excecute load data again
 
 ⸻
 
 🎯 所以核心原则是：
 
-❗UI 不负责决定“什么时候加载数据”
+### ❗UI SHOULD ONLY CARE ABOUT DISPLAY DATA BUT NOT WHEN TO LOAD DATA
 
-👉 UI 只负责：
-
-🖼️ 展示数据
 
 ⸻
 
-👉 数据什么时候加载，由谁决定？
-✅ ViewModel
+✅ ViewModel should care about loading data.
 
-🧠 再用一个类比（你会一下记住）
-	•	ViewModel = 🍳 厨师
-	•	Composable = 🍽️ 服务员
-
-⸻
-
-👉 正确方式：
-
-🍳 厨师决定什么时候做菜
-🍽️ 服务员只是端上来
-
-⸻
-
-👉 错误方式（你现在的）：
-
-🍽️ 服务员说：“我觉得你该做菜了！”
-
-💥 每来一个客人（recomposition）就喊一次
-
-## Tests
+## QUIZ
 
 🎯 规则（很重要）
 
