@@ -69,8 +69,8 @@ Then what happend when navigating back?
 🧩 Scenario 2：List page gets destroyed
 
 e.g：
-	•	popBackStack 彻底清掉
-	•	Or Activity is recreated（rotate screen / memory recycled）
+- popBackStack 彻底清掉
+- Or Activity is recreated（rotate screen / memory recycled）
 
 Then：
 
@@ -78,13 +78,7 @@ Then：
 
 ⸻
 
-🎯 再看你 Details 页面那个 BottomSheet
-
-你说：
-
-点击按钮弹出 bottom sheet
-
-这里就很经典了👇
+🎯 How about clicking a button to show bottomsheet on details screen
 
 ```kotlin
 var showSheet by remember { mutableStateOf(false) }
@@ -93,46 +87,35 @@ if (showSheet) {
     ModalBottomSheet(...)
 }
 ```
-👉 当你点击按钮：
-```
-showSheet: false → true
-```
+👉 When clicking a button ```showSheet: false → true```
 
-💥 发生什么？
+💥 What happened?
 
-👉 Recomposition 触发
-👉 if (showSheet) 这块重新执行
-👉 BottomSheet 出现
+👉 Recomposition triggered
+👉 if (showSheet) block has been executed again
+👉 BottomSheet shows
 
 
-🧠 一个非常重要的判断标准
+🧠 An important signal
 
-❓有没有“state 改变”？
+❓Any state change?
 
-	•	有 👉 一定有 Recomposition
-	•	没有 👉 不会发生 Recomposition
+- Yes 👉 Recomposition ✅ 
+- NO 👉 ❌ Recomposition
 
-💡 用你这个例子做最终总结
+💡 In summury
 
 👉 List → Details → Back：
-	•	❌ 不是自动 recomposition
-	•	❌ 不是页面刷新
-	•	✅ 是 Navigation 切换 + 可能复用 UI
+	•	❌ Not a recomposition
+	•	❌ Not a page refresh
+	•	✅ Navigation 切换 + 可能复用 UI
 
 👉 BottomSheet：
-	•	✅ 是标准 Recomposition 场景（state 改变）
+	•	✅ A typical scenario of Recomposition -> state changes
 
-⸻
+🚀 **Recomposition > 🔁 Composable functions are running again（only the necessary parts**
 
-🚀 给你一个进阶理解（你已经快到这一步了）
-
-Recomposition 本质上就是：
-
-🔁 Composable 函数被重新调用（但只针对需要的部分）
-
-不是整棵 UI 树，而是：
-
-👉 “精确打击”
+不是整棵 UI 树，而是：👉 “精确打击”
 
 ⸻
 
