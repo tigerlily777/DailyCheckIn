@@ -150,6 +150,7 @@ if (showSheet) {
 ✅ 只有“被 collect / observe 的数据”，才算 Compose 的 state
 
 ⸻
+
 🧠 2 ：How about the normal vars？ ```var count = 0```
 
 ❌ recomposition
@@ -227,20 +228,18 @@ _uiState.value = uiState.copy(count = uiState.count + 1)
 
 🧩 再用一个生活类比（保证你记住）
 
-你可以把 state 想成：
+State is a parcel：📦 
 
-👉 📦 一个“包裹”
-
-- 改包裹里面的东西（不换盒子）👉 Compose：🙈 看不见
-- 换一个新包裹 👉 Compose：👀 发现了！更新 UI！
+- If you change the thing inside of the box 👉 Compose：🙈 doesn't know
+- If you change another parcel box 👉 Compose：👀 YES I can tell it changed! Updating UI!
 
 ⸻
 
-🎯 回到你最初的那个场景
+🎯 Back to the original usecase
 
 List → Details → Back
 
-👉 会不会 recomposition，取决于：✔ List 用的 state 有没有变
+👉 recomposition depends on：✔ whether the state of list has changed!
 
 比如：val list by viewModel.list.collectAsState()
 
@@ -257,39 +256,35 @@ List → Details → Back
 👉 **Compose 本质是：🧠 “读取 state → 记录依赖 → state 变 → 重新执行”**
 
 ## The lifecycle of viewmodel 
-🧠 一、ViewModel 到底“什么时候活 / 什么时候死”？
+🧠 1️⃣ ViewModel - when alive/die?
 
-先给你一句定海神针：
-
-✅ ViewModel 的生命周期 ≠ Composable 生命周期
-✅ 它跟的是 ViewModelStoreOwner
+✅ ViewModel lifecycle ≠ Composable lifecycle
+✅ It binds to ViewModelStoreOwner
 
 ⸻
 
-🎯 谁是 ViewModelStoreOwner？
+🎯 Who's ViewModelStoreOwner？
 
-常见有三个：
+3 common ones：
 	•	Activity
 	•	Fragment
-	•	Navigation 的 BackStackEntry（最重要！）
+	•	**Navigation BackStackEntry** 
 
 ⸻
 
-🧩 在 Navigation Compose 里（你现在的场景）
+🧩 In Navigation Compose 
 ```
 composable("list") {
     val vm: ListViewModel = viewModel()
 }
 ```
-👉 这个 ViewModel 属于：
+👉 The ViewModel belongs to：
 
-🧱 当前这个 navigation entry（list 这页）
+🧱 The current navigation entry（list page）
 
 ⸻
 
 🔥 那什么时候会被销毁？
-
-👉 非常关键一句：
 
 ❗当这个 screen 从 back stack 被移除时
 
@@ -303,12 +298,13 @@ composable("list") {
 
 ❌ 被 pop 掉 navController.popBackStack("list", inclusive = true)
 👉 List 被干掉
-👉 ViewModel 💀 销毁
+👉 ViewModel 💀 destroyed
 
-❌ 进程被杀（系统回收）
-👉 ViewModel 💀 也没了
+❌ Kill the app（系统回收）
+👉 ViewModel 💀 destroyed
+
+
 🧠 一个超好记的类比
-
 你可以把：
 	•	Navigation back stack = 🏨 酒店房间
 	•	ViewModel = 🧳 你放在房间里的行李
@@ -316,7 +312,7 @@ composable("list") {
 👉 房间还在 → 行李还在
 👉 房间被退掉 → 行李没了
 
-❗二、你问的“scope 写错”是什么意思？
+❗2️⃣ 你问的“scope 写错”是什么意思？
 
 这个是很多人踩坑的地方，你问得非常好。
 🎯 正确方式（推荐）val vm: ListViewModel = viewModel()
@@ -361,15 +357,16 @@ val vm: MyVM = viewModel(parentEntry)
 
 ❗ViewModel scope 选错了 → 生命周期不对 → 行为异常
 
-🔥 三、你问的 init vs LaunchedEffect（核心 battle）
+🔥 3️⃣ **init vs LaunchedEffect**
 
 你观察得非常细：
 
-init 是构造后执行
-LaunchedEffect 是 Composable 里执行
+init -> in viewmodel
+LaunchedEffect -> in Composable 
 
 👉 ✔ 完全正确
-🎯 推荐模式（非常重要）
+🎯 Best approach
+
 ```
 class ListViewModel : ViewModel() {
     init {
@@ -377,19 +374,17 @@ class ListViewModel : ViewModel() {
     }
 }
 ```
-👉 为什么推荐？
+👉 Why?
 
-因为：
+✅ bind data lifecycle to ViewModel 
 
-✅ 数据生命周期交给 ViewModel 管
-
-⚠️ 你现在的写法（常见坑）
+⚠️ Not so good
 ```
 LaunchedEffect(Unit) {
     vm.loadData()
 }
 ```
-👉 看起来没问题，但有坑👇
+👉 WHY?
 
 ⸻
 
