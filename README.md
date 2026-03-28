@@ -24,4 +24,5 @@ Oct 28/29 - Some kotlin interview questions (need to add wiki links)
 
 2026
 Mar 25 - 28 [Recomposition](https://github.com/tigerlily777/DailyCheckIn/blob/main/About%20recomposition.md)
-Mar 28 - rengwuxian compose 大师课 1.1， 1.2，
+Mar 28 - rengwuxian compose 大师课 1.1， 1.2
+Mar 29 - rengwuxian compose 1.3 mutablestateof
