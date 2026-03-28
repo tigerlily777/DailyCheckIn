@@ -38,7 +38,7 @@ class Delegate {
    operator fun setValue(...) { ... }
 }
 ```
-Delegate class has no extends, no implement, just need to have getValue and setValue with matching args, return types, and must have **operator** key word.
+Delegate class has ❌ extends, ❌ implement, just need to have getValue && setValue with matching args, return types, and must have **operator** key word.
 ```
 ...
 import androidx.compose.runtime.getValue
@@ -72,3 +72,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 ```
+
+### 1.4 remember 
+
+
