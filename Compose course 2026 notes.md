@@ -75,4 +75,4 @@ class MainActivity : ComponentActivity() {
 
 ### 1.4 remember 
 
-
+compose > layout > draw
