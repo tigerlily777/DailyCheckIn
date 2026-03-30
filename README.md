@@ -28,3 +28,5 @@ Mar 25 - 28 [Recomposition](https://github.com/tigerlily777/DailyCheckIn/blob/ma
 Mar 28 - rengwuxian compose 大师课 1.1， 1.2
 
 Mar 29 - rengwuxian compose 1.3 mutablestateof
+
+Mar 30 - 1.4 remember
