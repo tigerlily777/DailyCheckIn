@@ -76,3 +76,29 @@ class MainActivity : ComponentActivity() {
 ### 1.4 remember 
 
 compose > layout > draw
+
+```kotlin
+class MainActivity : ComponentActivity() {
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            Compose2026Theme {
+                Box(modifier = Modifier.safeContentPadding()) {
+                    val name = mutableStateOf("Tiger")
+                    Text(name.value)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            delay(3000)
+            name.value = "Ning"
+        }
+    }
+}
+```
+What if I move ```val name = mutableStateOf("Tiger")`` inside of the Box composable? 
+
+When name value changes, it will trigger recompostion, during recomposition, val name is created again. This is why if move name declaration into composable, it will not change the name.
