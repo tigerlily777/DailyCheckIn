@@ -125,7 +125,13 @@ Animation, read/write data to bundle
 screen的state - viewmodel 管理
 
 ### 1.19 Architect - viewModel
+Use viewmodel to manage screen data so it will survive during configuration changes
 stateflow/mutableStateflow
 
 ### 1.20 Architect - Navigation
+
+Navigating between multiple screens
+- Backstack
+- Pass data
+- Animation
 
