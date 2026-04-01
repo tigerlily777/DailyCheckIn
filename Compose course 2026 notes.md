@@ -114,6 +114,11 @@ ViewModel > Jetpack
 Navigation 3 > Jetpack Compose
 Animation, read/write data to bundle
 
+**State**
+局部状态 - remember
+外部状态 - state hoisting
+screen的state - viewmodel 管理
+
 ### 1.19 Architect - viewModel
 
 ### 1.20 Architect - Navigation
