@@ -135,6 +135,8 @@ Navigating between multiple screens
 - Pass data
 - Animation
 
+Adding navigation 3 dependency to the app:
+
 ```toml
 [versions]
 ...
@@ -146,3 +148,33 @@ nav3 = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = 
 viewmodel-nav3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycle" }
 ```
 
+```kotlin
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            val backStack = remember { mutableStateListOf<String>() }
+
+            NavDisplay(backStack) { key ->
+                when (key) {
+                    "list" -> NavEntry(key) { ListScreen() }
+                    "details" -> NavEntry(key) { DetailsScreen() }
+                    else -> NavEntry(key) { }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ListScreen(onClick: () -> Unit) {
+    Box(modifier = Modifier.fillMaxSize().background(Color.Yellow).clickable { onClick() }) 
+}
+
+@Composable
+fun DetailsScreen() {
+    Box(modifier = Modifier.fillMaxSize().background(Color.Green))
+}
+```
