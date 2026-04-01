@@ -105,13 +105,18 @@ When name value changes, it will trigger recompostion, during recomposition, val
 
 ### 1.18 Architect - screens/pages
 **activity**
+
 single activity + multiple fragment 
+
 activity -> Fragment -> view FragmentManager add() replace()
 
 **Composable**
 Activity > Composable > Composable
+
 ViewModel > Jetpack
+
 Navigation 3 > Jetpack Compose
+
 Animation, read/write data to bundle
 
 **State**
@@ -120,6 +125,7 @@ Animation, read/write data to bundle
 screen的state - viewmodel 管理
 
 ### 1.19 Architect - viewModel
+stateflow/mutableStateflow
 
 ### 1.20 Architect - Navigation
 
