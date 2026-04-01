@@ -29,4 +29,8 @@ Mar 28 - rengwuxian compose 大师课 1.1， 1.2
 
 Mar 29 - rengwuxian compose 1.3 mutablestateof
 
-Mar 30 - 1.4 remember
+Mar 30 31 - 1.4 remember
+
+Apr 1 - Navigation
+
+
