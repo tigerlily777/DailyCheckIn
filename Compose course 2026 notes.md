@@ -135,3 +135,14 @@ Navigating between multiple screens
 - Pass data
 - Animation
 
+```toml
+[versions]
+...
+navigation = "1.0.1"
+lifecycle = "2.10.0"
+
+[libraries]
+nav3 = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation" }
+viewmodel-nav3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycle" }
+```
+
