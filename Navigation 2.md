@@ -55,3 +55,26 @@ val navHostFragment =
     supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 val navController = navHostFragment.navController
 ```
+## 3. Design your navigation graph
+
+### Destination types
+- Hosted > Main and detail screens > Fills the entire navigation host. That is, the size of a hosted destination is the same as the size of the navigation host and previous destinations are not visible.
+- Dialog > Alerts, selections, forms > Presents overlay UI components. This UI is not tied to the location of the navigation host or its size. Previous destinations are visible underneath the destination.
+- Activity > Serve as an exit point to the navigation graph that starts a new Android activity that is managed separately from the Navigation component. In modern Android development, an app consists of a single activity. Activity destinations are therefore best used when interacting with third party activities or as part of the migration process. > Represents unique screens or features within the app.
+
+### Compose
+
+```kotlin
+@Serializable
+object Profile
+@Serializable
+object FriendsList
+
+val navController = rememberNavController()
+
+NavHost(navController = navController, startDestination = Profile) {
+    composable<Profile> { ProfileScreen( /* ... */ ) }
+    composable<FriendsList> { FriendsListScreen( /* ... */ ) }
+    // Add more destinations similarly.
+}
+```
