@@ -63,7 +63,7 @@ val navController = navHostFragment.navController
 - Activity > Serve as an exit point to the navigation graph that starts a new Android activity that is managed separately from the Navigation component. In modern Android development, an app consists of a single activity. Activity destinations are therefore best used when interacting with third party activities or as part of the migration process. > Represents unique screens or features within the app.
 
 ### Compose
-
+In Compose, use a serializable object or class to define a route. A route describes how to get to a destination, and contains all the information that the destination requires. Once you have defined your routes, use the NavHost composable to create your navigation graph. 
 ```kotlin
 @Serializable
 object Profile
@@ -78,3 +78,8 @@ NavHost(navController = navController, startDestination = Profile) {
     // Add more destinations similarly.
 }
 ```
+1. A serializable object represents each of the two routes, Profile and FriendsList.
+2. The call to the NavHost composable passes a NavController and a route for the start destination.
+3. The lambda passed to the NavHost ultimately calls NavController.createGraph() and returns a NavGraph.
+4. Each route is supplied as a type argument to NavGraphBuilder.composable<T>() which adds the destination to the resulting NavGraph.
+5. The lambda passed to composable is what the NavHost displays for that destination.
