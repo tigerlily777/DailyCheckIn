@@ -83,3 +83,5 @@ NavHost(navController = navController, startDestination = Profile) {
 3. The lambda passed to the NavHost ultimately calls NavController.createGraph() and returns a NavGraph.
 4. Each route is supplied as a type argument to NavGraphBuilder.composable<T>() which adds the destination to the resulting NavGraph.
 5. The lambda passed to composable is what the NavHost displays for that destination.
+
+### Route
