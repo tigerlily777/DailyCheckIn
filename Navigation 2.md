@@ -30,8 +30,9 @@ dependencies {
 
 ## 2. Navigation controller
 ```val navController = rememberNavController()```
-You should create the NavController high in your composable hierarchy. It needs to be high enough that all the composables that need to reference it can do so.
-**State hoisting**
+> [!IMPORTANT]
+> - You should create the NavController high in your composable hierarchy. It needs to be high enough that all the composables that need to reference it can do so.
+> - **State hoisting**
 
 Views
 
@@ -78,10 +79,35 @@ NavHost(navController = navController, startDestination = Profile) {
     // Add more destinations similarly.
 }
 ```
-1. A serializable object represents each of the two routes, Profile and FriendsList.
+1. A ==serializable==. object represents each of the two routes, Profile and FriendsList. ==very important words==.
 2. The call to the NavHost composable passes a NavController and a route for the start destination.
 3. The lambda passed to the NavHost ultimately calls NavController.createGraph() and returns a NavGraph.
 4. Each route is supplied as a type argument to NavGraphBuilder.composable<T>() which adds the destination to the resulting NavGraph.
 5. The lambda passed to composable is what the NavHost displays for that destination.
 
-### Route
+> - ✅ route = screen "Unique ID" + "define args"
+> - Route is defined with @Serializable tag. Use data class for route with args, use object for route without args.
+```kotlin
+@Serializable
+object Home
+```
+```kotlin
+@Serializable
+data class Detail(val id: String)
+```
+❓Question: one NavHost or Multiple NavHost?
+✅ Usually we have multiple screens in one NavHost. It's common.
+App
+ └── NavHost
+      ├── Home
+      ├── Detail
+      ├── Profile
+
+Sometimes we need multiple NavHost esp for different bottom navigation items.
+App
+ ├── Tab A（一个 NavHost）
+ │     ├── A1
+ │     └── A2
+ ├── Tab B（一个 NavHost）
+ │     ├── B1
+ │     └── B2
