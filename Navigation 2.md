@@ -95,15 +95,19 @@ object Home
 @Serializable
 data class Detail(val id: String)
 ```
-❓Question: one NavHost or Multiple NavHost?
+
+❓❓Question: one NavHost or Multiple NavHost?
+
 ✅ Usually we have multiple screens in one NavHost. It's common.
+```
 App
  └── NavHost
       ├── Home
       ├── Detail
       ├── Profile
-
+```
 Sometimes we need multiple NavHost esp for different bottom navigation items.
+```
 App
  ├── Tab A（一个 NavHost）
  │     ├── A1
@@ -111,3 +115,14 @@ App
  ├── Tab B（一个 NavHost）
  │     ├── B1
  │     └── B2
+```
+👉 why multiple NavHost？
+
+Because：
+
+👉 Every Tab has its own back stack.
+
+
+
+
+
