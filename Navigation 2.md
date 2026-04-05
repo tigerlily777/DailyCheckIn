@@ -79,7 +79,7 @@ NavHost(navController = navController, startDestination = Profile) {
     // Add more destinations similarly.
 }
 ```
-1. A ==serializable==. object represents each of the two routes, Profile and FriendsList. ==very important words==.
+1. A **serializable** object represents each of the two routes, Profile and FriendsList.
 2. The call to the NavHost composable passes a NavController and a route for the start destination.
 3. The lambda passed to the NavHost ultimately calls NavController.createGraph() and returns a NavGraph.
 4. Each route is supplied as a type argument to NavGraphBuilder.composable<T>() which adds the destination to the resulting NavGraph.
