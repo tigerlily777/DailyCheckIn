@@ -35,7 +35,7 @@ Apr 1.18 - Architect - Screen
 
 Navigation
 
-Apr 3 - 8 Navigation 2 compose navigation
+Apr 3 - 9 Navigation 2 compose navigation
 
 
 
