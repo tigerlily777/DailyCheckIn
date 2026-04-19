@@ -41,6 +41,8 @@ Apr10 - 17 break
 
 Apr18 ...
 
+Apr19 half marathon day
+
 
 
 
