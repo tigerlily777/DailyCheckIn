@@ -43,7 +43,11 @@ Apr18 ...
 
 Apr19 Navigaition recap
 
-Apr23/24 Add navigation compose notes
+Apr23 Add navigation compose notes - Navhost
+
+Apr24 NavGraph
+
+Anzac day long weekend： bottomsheet
 
 
 
