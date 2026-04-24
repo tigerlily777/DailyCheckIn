@@ -361,9 +361,11 @@ NavHost(navController, startDestination = Home) {
 🎯 作用 1：分模块（最常用）
 
 比如你的 app：
+```
 App
  ├── Auth（登录流程）
  └── Main（主功能）
+```
 
 👉 你可以这样写：
  ```
@@ -424,6 +426,92 @@ Login → Register → ForgotPassword
 ```popUpTo("auth") { inclusive = true }```
 👉 整个登录流程清空
 
+🧠 作用 4：解耦（架构级）
+
+👉 大项目里：
+
+* 每个 feature 一个 graph
+* 每个 graph 在不同 module
+
+⸻
+
+👉 最终主 NavHost 只是：
+
+```kotlin
+include(authGraph)
+include(mainGraph)
+```
+
+👉 这就是：
+
+> 💥 模块化 navigation
+
+🧩 四、graph 和 route 的关系（你一定要搞清）
+
+👉 我帮你画一个结构👇
+
+```
+NavHost
+ ├── Graph: auth
+ │     ├── Login
+ │     └── Register
+ │
+ └── Graph: main
+       ├── Home
+       └── Detail
+```
+
+🧠 五、你现在的问题本质上是这个
+
+> ❗入口不影响 graph
+> ❗graph 只关心“功能结构”
+
+🧪 回到你之前那个复杂场景
+
+```
+Feature
+ ├── List
+ └── Detail
+```
+👉 正确设计：
+
+```kotlin
+navigation(startDestination = List, route = "feature") {
+    composable<List> { ... }
+    composable<Detail> { ... }
+}
+```
+
+👉 不管入口：
+
+* quick link
+* notification
+* home
+
+👉 全部：```kotlin navController.navigate(Detail(id))```
+
+🔥 六、❌ graph 不是必须的, ✅ graph 是“当你需要分组时才用”
+
+🎯 七、总结成一句你能记住的话
+
+🧠 graph 是什么？
+
+> 👉 一组有 startDestination 的 route 分组
+
+⸻
+
+🎯 用来干嘛？
+
+* 分模块（Auth / Main / Feature）
+* 表示一个 flow
+* 控制 back stack
+* 支持模块化
+
+⸻
+
+❗最重要一句
+
+🔥 graph 是“流程”，route 是“页面”
 
 
 
