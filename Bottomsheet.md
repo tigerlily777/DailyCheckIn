@@ -1,6 +1,6 @@
 # Bottomsheet
 
-![An example of a Material Design 3 modal bottom sheet.](https://developer.android.com/static/develop/ui/compose/images/layouts/material/m3-bottom-sheet.png)
+<img src="https://developer.android.com/static/develop/ui/compose/images/layouts/material/m3-bottom-sheet.png" width="480">
 
 If you want to implement a [bottom sheet](https://m3.material.io/components/bottom-sheets/overview), you can use the
 [`ModalBottomSheet`](https://developer.android.com/reference/kotlin/androidx/compose/material3/ModalBottomSheet.composable) composable.
@@ -136,11 +136,12 @@ In this example, note the following:
 
 ### Results
 
-When the user first presses the button, the sheet displays partially:
-![A bottom sheet that initially only fills part of the screen. The user can swipe to fill the screen with it, or dismiss it](https://developer.android.com/static/develop/ui/compose/images/components/bottom-sheet-partial.png) **Figure 1.** Partially displayed bottom sheet.
+When the user first presses the button, the sheet displays partially. If the user swipes up on the sheet, it fills the screen:
 
-If the user swipes up on the sheet, it fills the screen:
-![A bottom sheet that the user has expanded to fill the screen.](https://developer.android.com/static/develop/ui/compose/images/components/bottom-sheet-fullscreen.png) **Figure 2.** Full-screen bottom sheet.
+<img src="https://developer.android.com/static/develop/ui/compose/images/components/bottom-sheet-partial.png" width="280"><img src="https://developer.android.com/static/develop/ui/compose/images/components/bottom-sheet-fullscreen.png" width="280">
+
+**Figure 1.** Partially displayed bottom sheet.
+**Figure 2.** Full-screen bottom sheet.
 
 > [!NOTE]
 > **Note:** If you set `skipPartiallyExpanded` to true, the sheet opens immediately to full screen.
