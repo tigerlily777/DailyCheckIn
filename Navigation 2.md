@@ -346,6 +346,84 @@ NavHost(navController, startDestination = Home) {
 > ❗NavHost = graph 的“载体”
 > ❗graph = NavHost 里面那一坨定义
 
+🧠 二、那为什么还要单独提 graph？（关键点）
+
+因为：
+
+👉 当你的 app 变复杂时，你需要“分组”和“分层”
+
+👉 这时候就会用到：
+
+## 🔥 Nested Navigation Graph（嵌套图）
+
+🧩 三、graph 的真正作用（重点来了）
+
+🎯 作用 1：分模块（最常用）
+
+比如你的 app：
+App
+ ├── Auth（登录流程）
+ └── Main（主功能）
+
+👉 你可以这样写：
+ ```
+NavHost(...) {
+    navigation(startDestination = Login, route = "auth") {
+        composable<Login> { ... }
+        composable<Register> { ... }
+    }
+
+    navigation(startDestination = Home, route = "main") {
+        composable<Home> { ... }
+        composable<Detail> { ... }
+    }
+}
+```
+
+👉 这里：
+
+* "auth" = 一个 graph
+* "main" = 一个 graph
+
+💡 本质：
+
+> 👉 graph = route 的“分组容器”
+
+⸻
+
+🧠 作用 2：定义一个“流程入口”
+
+👉 每个 graph 都有：```startDestination```
+
+👉 意味着：> 👉 你可以“跳到一个流程”，而不是一个 screen
+
+🧪 举个非常重要的例子
+
+navController.navigate("auth")
+
+👉 实际效果：进入 auth graph → 自动跳到 Login
+
+👉 这就是：
+
+💥 graph 可以作为 navigation 的目标
+
+🧠 作用 3：控制 back stack（高级但重要）
+
+👉 graph 可以作为一个整体被 pop
+
+```navController.popBackStack("auth", inclusive = true)```
+
+👉 意味着：
+
+👉 一次性退出整个流程
+
+🧪 典型场景
+Login → Register → ForgotPassword
+
+👉 登录成功：
+```popUpTo("auth") { inclusive = true }```
+👉 整个登录流程清空
+
 
 
 
