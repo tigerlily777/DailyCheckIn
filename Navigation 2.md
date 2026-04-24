@@ -337,6 +337,14 @@ NavHost(navController, startDestination = Home) {
     composable<Detail> { DetailScreen() }
 }
 ```
+👉 这里其实就是一个：
+
+> ✅ 最简单的 navigation graph
+
+👉 所以：
+
+> ❗NavHost = graph 的“载体”
+> ❗graph = NavHost 里面那一坨定义
 
 
 
