@@ -513,6 +513,35 @@ navigation(startDestination = List, route = "feature") {
 
 🔥 graph 是“流程”，route 是“页面”
 
+## Dialog destination
+为什么银行 App 离不开 Dialog 导航？
+在普通的 Compose 中，我们常用 MutableStateOf(showDialog) 来控制弹窗。但在 Navigation 框架下，把弹窗定义为一个“目的地”有奇效：
+```
+- 二重验证 (2FA)：用户点转账，弹出一个“请输入短信验证码”的 Dialog。如果这是一个独立的 dialog 目的地，它会有自己独立的生命周期。
+
+- 返回键处理：作为导航目的地的 Dialog，用户按手机物理返回键时，Navigation 会自动帮你关闭弹窗，而不需要你手动写 onBack 逻辑。
+
+- Deep Link 直达：甚至可以实现“点击通知，直接弹出一个特定的风险提示对话框”。
+```
+文档要点简述：
+在 NavHost 里，不要用 composable<T>，而是改用 dialog<T>。
+```kotlin
+NavHost(...) {
+    composable<Home> { ... }
+    // 这是一个弹窗目的地
+    dialog<RiskWarning> {
+        RiskWarningScreen()
+    }
+}
+```
+| 维度 | 传统 UI 组件式 (AlertDialog) | 导航目的地式 (dialog route) |
+| ----------- | ----------- | ----------- |
+| 定义方式 | 在 composable 内部定义 mutableStateOf(show) | 在 NavHost 里使用 dialog<Route> 定义 |
+| 触发方式 | 修改布尔值状态 | 调用 navController.navigate(Route) |
+| 返回键处理 | 需要手动处理 | onDismissRequest,自动处理。按返回键会自动从 BackStack 弹出 |
+| URL/路由 | 没有独立路由 | 有独立路由，支持 Deep Link 直接打开 |
+| 生命周期 | 依附于所属的 Screen | 拥有独立的生命周期 (LifecycleOwner) |
+
 
 ## Type safty
 
