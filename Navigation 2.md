@@ -542,6 +542,98 @@ NavHost(...) {
 | URL/路由 | 没有独立路由 | 有独立路由，支持 Deep Link 直接打开 |
 | 生命周期 | 依附于所属的 Screen | 拥有独立的生命周期 (LifecycleOwner) |
 
+2. 为什么要用 NavHost 来 host 一个 dialog？
+你提到以前可能是在 Fragment 里创建。现在在 NavHost 里定义 dialog<T>，其实是把 Dialog 看作一个独立的页面。
+
+银行 App 实战场景：
+想象一下“转账流程”：
+
+Screen A: 输入金额。
+
+Dialog B: 弹出“风险提示”，要求点击“同意”。
+
+Screen C: 输入密码。
+
+如果你用 dialog<RiskRoute>：
+
+解耦：Screen A 不需要知道 RiskDialog 的存在，它只需要发出“我想去转账”的指令，导航器根据业务逻辑决定是否要 Maps 到 RiskDialog。
+
+状态保存：即使手机横竖屏切换，Navigation 也能帮你记住当前停留在哪个 Dialog 上。
+
+Deep Link：如果后台发个推送说“您的账户有风险，请查看”，点击后可以直接通过路由定位到这个 Dialog。
+
+3. 什么时候该用哪种？
+正如你阅读的 对话框目的地 文档中所述：
+
+使用对话框目的地代表应用中需要自己拥有单独界面时...如果您想使用对话框显示不太复杂的提示（例如确认），不妨考虑使用 AlertDialog。
+
+用 NavHost 的 dialog： 逻辑复杂、需要独立 ViewModel、需要通过路由跳转、或者是一个完整的业务子流（如：登录后的协议确认）。
+
+用普通 Compose AlertDialog： 简单的二次确认（如：“确定退出登录吗？”）、加载等待框（Loading）。
+
+### 提问
+
+比如你说拥有独立生命周期，为什么一个dialog会需要独立生命周期呢？有什么例子吗，在什么情况下需要？dialog不是跟着fragment的生命周期走就行了？
+还有返回键处理这，如果我想创建一个dialog，但是我不希望user通过device back button dismiss dialog，只能通过dialog上的button来dismiss，这种dialog route还能做到吗？
+再有你举的例子里，手机横竖屏切换，dialog不会消失，这不是viewmodel管的事情吗？如果viewmode给一个状态让compose显示dialog，那横竖屏的时候dialog是不是也不会消失，这种是常见的写法吗？
+
+
+1. 为什么 Dialog 需要独立的生命周期？
+在传统的写法里，Dialog 确实常跟着 Fragment 走。但在 Compose Navigation 中，给 Dialog 一个独立的生命周期（LifecycleOwner）有以下几个典型的银行场景：
+
+自动倒计时/超时退出：
+假设你在显示一个“交易确认验证码”的 Dialog。这个 Dialog 需要在显示 60 秒后自动关闭并提示超时。如果它有独立生命周期，你可以在 dialog 内部通过 LaunchedEffect 监听 OnResume，直接在 Dialog 级别管理这个倒计时。
+
+埋点监控：
+银行合规通常要求记录用户在每一个弹窗停留的时间。有独立生命周期意味着你可以精准捕捉到这个 Dialog 什么时候“可见”，什么时候“消失”，而不需要在主页面里写一大堆逻辑去判断弹窗状态。
+
+Scoped ViewModel：
+这是最核心的。你可以为这个 Dialog 绑定一个专属的 ViewModel。当 Dialog 消失时，这个 ViewModel 会自动被销毁（onCleared）。
+
+例子： 一个复杂的“理财产品风险揭示书”弹窗，里面需要请求网络数据、校验滚动位置。给它一个独立的 ViewModel，比把这些逻辑全塞进主页面的 ViewModel 要干净得多。
+
+2. 拦截返回键：不许用户通过 Back 键关闭
+在银行 App 中，有些弹窗是强制性的（比如：强制更新、检测到环境风险、支付中的 Loading）。
+
+能不能做到？ 能。
+虽然你使用了 dialog 路由，但你依然可以控制它的行为。在定义 dialog 时，你可以传入 dialogProperties：
+
+```kotlin
+dialog<RiskRoute>(
+    dialogProperties = DialogProperties(
+        dismissOnBackPress = false, // 禁用物理返回键关闭
+        dismissOnClickOutside = false // 禁用点击弹窗外部关闭
+    )
+) {
+    RiskScreen(
+        onConfirm = { navController.popBackStack() } // 只能通过点击按钮关闭
+    )
+}
+```
+
+这样一来，这个 Dialog 就像一个“钉子户”，用户按返回键没反应，只能乖乖按照你 UI 上的逻辑走。
+
+3. 横竖屏切换与状态恢复：ViewModel vs Navigation
+这是一个非常经典的误区，我们来理清一下：
+
+ViewMode 管的是“数据”：比如 isDialogShowing = true。
+
+Navigation 管的是“路径”：比如“当前用户在哪个门牌号”。
+
+为什么推荐用 Navigation 管？
+如果你用 isDialogShowing：
+
+逻辑分散：你的 HomeScreenViewModel 里要写满 showLoading, showRiskDialog, showSuccessDialog 各种布尔值。
+
+堆栈管理难：如果弹窗 A 消失后要弹窗 B，你需要手动写逻辑控制布尔值的转换。
+
+如果你用 Navigation dialog：
+它是自动的。当你调用 Maps(RouteB) 时，Navigation 自动把 B 压入堆栈。
+
+横竖屏切换时：系统会销毁并重建 Activity。Navigation 会自动根据 BackStack（返回栈）里的记录，重新把那个 Dialog 给“画”出来。
+
+写法是否常见？：在现代 Compose 开发中，越来越常见。尤其是复杂的业务流。对于简单的“确定/取消”，用 AlertDialog 配合状态位确实更轻量；但对于有业务逻辑的弹窗，用 dialog 路由是更规范的做法。
+
 
 ## Type safty
 
