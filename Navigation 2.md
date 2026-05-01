@@ -514,7 +514,7 @@ navigation(startDestination = List, route = "feature") {
 🔥 graph 是“流程”，route 是“页面”
 
 
-
+## Type safty
 
 
 
