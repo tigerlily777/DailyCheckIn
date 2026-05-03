@@ -59,6 +59,8 @@ May 1 - Init project checkin - compose exercise
 
 May 2 - navigation + type safety
 
+May 3 - traditional alert dialog vs navhost route dialog
+
 
 
 
