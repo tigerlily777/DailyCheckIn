@@ -57,6 +57,8 @@ Apr 29 ……
 
 May 1 - Init project checkin - compose exercise
 
+May 2 - navigation + type safety
+
 
 
 
