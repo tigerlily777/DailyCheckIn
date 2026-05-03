@@ -61,6 +61,8 @@ May 2 - navigation + type safety
 
 May 3 - traditional alert dialog vs navhost route dialog
 
+May 4 - dialog - with independent lifecycle
+
 
 
 
