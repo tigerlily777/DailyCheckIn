@@ -63,6 +63,8 @@ May 3 - traditional alert dialog vs navhost route dialog
 
 May 4 - dialog - with independent lifecycle
 
+May 5 - generic type
+
 
 
 
