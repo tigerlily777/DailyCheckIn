@@ -1,6 +1,6 @@
 # Generic type
 
-## 使用泛型创建可重复使用的类
+## 使用泛型创建可重复使用的类 + Use data class + Use enum class
 -1.  假设您正在为某项在线测验编写一款应用，测验问题通常有多种类型，例如填空或判断正误。下面我们来定义三种不同类型的问题。
 
 填空题：答案是由 String 表示的字词。
@@ -54,3 +54,13 @@ enum class Difficulty {
 所以需要把```class Question<T>``` 变成 data class
 
 再run，得到 ```Question(questionText=Quoth the raven ___, answer=nevermore, difficulty=MEDIUM)```
+
+data class has:
+
+```
+equals()
+hashCode()：在使用某些集合类型时，您会看到此方法。
+toString()
+componentN()：component1()、component2() 等
+copy()
+```
