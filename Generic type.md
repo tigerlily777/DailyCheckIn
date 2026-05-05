@@ -32,9 +32,25 @@ class NumericQuestion(
 After using generic type
 
 ```
+fun main() {
+    val question1 = Question<String>("Quoth the raven ___", "nevermore", Difficulty.MEDIUM)
+    val question2 = Question<Boolean>("The sky is green. True or false", false, Difficulty.EASY)
+    val question3 = Question<Int>("How many days are there between full moons?", 28, Difficulty.HARD)
+    println(question1.toString())
+}
+
 class Question<T>(
     val questionText: String,
     val answer: T,
-    val difficulty: String
+    val difficulty: Difficulty
 )
+
+enum class Difficulty {
+    EASY, MEDIUM, HARD
+}
 ```
+现在运行，得到的是output是类似```Question@2dda6444```
+
+所以需要把```class Question<T>``` 变成 data class
+
+再run，得到 ```Question(questionText=Quoth the raven ___, answer=nevermore, difficulty=MEDIUM)```
