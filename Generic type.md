@@ -64,3 +64,47 @@ toString()
 componentN()：component1()、component2() 等
 copy()
 ```
+## Use object -> for singleton
+
+在 Kotlin 中，你不需要像 Java 那样写复杂的双重检查锁。只需把 class 换成 object，它就变成了一个单例对象。
+
+特点：
+
+- 不能有构造函数（因为你不能手动 new 它）。
+
+- 第一次被访问时自动初始化。
+
+- 全局唯一，状态共享。
+
+```
+class Quiz {
+    val question1 = Question<String>("Quoth the raven ___", "nevermore", Difficulty.MEDIUM)
+    val question2 = Question<Boolean>("The sky is green. True or false", false, Difficulty.EASY)
+    val question3 = Question<Int>("How many days are there between full moons?", 28, Difficulty.HARD)
+
+    companion object StudentProgress {
+    var total: Int = 10
+    var answered: Int = 3
+    }
+}
+
+fun main() {
+    println("${Quiz.answered} of ${Quiz.total} answered.")
+}
+```
+
+output: ```3 of 10 answered.```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
