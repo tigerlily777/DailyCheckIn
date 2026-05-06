@@ -65,6 +65,8 @@ May 4 - dialog - with independent lifecycle
 
 May 5 - 6 - [generic type](https://github.com/tigerlily777/DailyCheckIn/blob/main/Generic%20type.md)
 
+May 7 
+
 
 
 
