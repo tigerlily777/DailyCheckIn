@@ -181,7 +181,23 @@ output:
 
 关键字 override：当你在类里实现接口定义的属性或方法时，必须加上 override，告诉编译器：“我正在履行合同”。
 
+```
+interface ProgressPrintable {
+    val progressText: String  // 属性声明
+    fun printProgressBar()    // 方法声明
+}
 
+class Quiz : ProgressPrintable {
+    // 履行合同：提供具体的文字格式
+    override val progressText: String
+        get() = "$answered of $total answered"
+
+    // 履行合同：提供具体的打印逻辑
+    override fun printProgressBar() {
+        // ... 之前的 repeat 逻辑 ...
+    }
+}
+```
 
 
 
