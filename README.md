@@ -63,7 +63,7 @@ May 3 - traditional alert dialog vs navhost route dialog
 
 May 4 - dialog - with independent lifecycle
 
-May 5 - [generic type](https://github.com/tigerlily777/DailyCheckIn/blob/main/Generic%20type.md)
+May 5 - 6 - [generic type](https://github.com/tigerlily777/DailyCheckIn/blob/main/Generic%20type.md)
 
 
 
