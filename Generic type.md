@@ -269,11 +269,93 @@ catch (e: HttpException) {
 
 > 👉 “技术错误 → 业务可理解错误”
 
+🧩 四、Domain Layer - 决定业务逻辑
+
+比如：
+
+* token 过期 → 强制 logout
+* 某些 error → retry
+
+🧠 五、最关键：ViewModel 该做什么？
+
+👉 你问的核心其实是这个：
+
+❓“成功去下个 page，不成功去 error page，这写哪？”
+
+⸻
+
+👉 答案非常明确：
+
+> 🔥 ViewModel 决定 navigation
 
 
+🧪 举个你这个场景
+
+viewmodel:
+```kotlin
+fun onButtonClick() {
+    viewModelScope.launch {
+        when (val result = repository.callApi()) {
+            is Result.Success -> {
+                _event.emit(UiEvent.NavigateNext)
+            }
+            is Result.Error -> {
+                _event.emit(UiEvent.ShowError)
+            }
+        }
+    }
+}
+```
+
+定义 UI Event
+```
+sealed class UiEvent {
+    object NavigateNext : UiEvent()
+    object ShowError : UiEvent()
+}
+```
+
+👉 💡 重点：
+
+> ❗navigation 不是 UI 做的
+> 
+> ❗是 ViewModel 决定的
 
 
+🧩 六、Composable 只做一件事
 
+👉 观察 state + event
+
+```kotlin
+LaunchedEffect(Unit) {
+    viewModel.event.collect { event ->
+        when (event) {
+            UiEvent.NavigateNext -> navController.navigate("next")
+            UiEvent.ShowError -> navController.navigate("error")
+        }
+    }
+}
+```
+
+👉 💥 这里你就打通了：
+
+* state → 控 UI
+* event → 控 navigation
+
+🧠 七、你刚刚说的“generic 不熟”其实是这个问题
+
+👉 你需要的只是：
+```kotlin Result<T>```
+
+👉 T 就是：
+
+* User
+* List
+* Whatever
+
+👉 你不用复杂泛型，只要记住：
+
+👉 Result = 成功带数据，失败带错误
 
 
 
