@@ -199,6 +199,16 @@ class Quiz : ProgressPrintable {
 }
 ```
 
+### 💥 error handling + 分层 + navigation decision
+
+🧠 一、先给你一个“总原则”（非常重要）
+
+🔥 每一层只做一件事：
+
+* Data layer 👉 处理“请求 + 原始错误”
+* Domain layer 👉 处理“业务规则 + 结果抽象”
+* ViewModel 👉 处理“UI state + 导航决策”
+
 
 
 
