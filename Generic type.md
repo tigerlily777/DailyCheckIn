@@ -205,10 +205,38 @@ class Quiz : ProgressPrintable {
 
 🔥 每一层只做一件事：
 
-* Data layer 👉 处理“请求 + 原始错误”
-* Domain layer 👉 处理“业务规则 + 结果抽象”
-* ViewModel 👉 处理“UI state + 导航决策”
+> * Data layer 👉 处理“请求 + 原始错误”
+> * Domain layer 👉 处理“业务规则 + 结果抽象”
+> * ViewModel 👉 处理“UI state + 导航决策”
 
+🧩 二、先解决你最痛的点：error 到底放哪？
+
+🥇 Data Layer（Repository）
+
+👉 只做一件事：
+
+👉 把所有东西统一成“成功 / 失败”
+
+推荐写法（关键🔥）
+```
+sealed class Result<out T> {
+    data class Success<T>(val data: T) : Result<T>()
+    data class Error(val exception: Throwable) : Result<Nothing>()
+}
+
+suspend fun getUser(): Result<User> {
+    return try {
+        val response = api.getUser()
+        Result.Success(response)
+    } catch (e: Exception) {
+        Result.Error(e)
+    }
+}
+```
+👉 💡 重点：
+
+> ❗Data layer 不关心 UI
+> ❗只负责“把异常变成统一结构”
 
 
 
