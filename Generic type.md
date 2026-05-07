@@ -218,7 +218,7 @@ class Quiz : ProgressPrintable {
 👉 把所有东西统一成“成功 / 失败”
 
 推荐写法（关键🔥）
-```
+```kotlin
 sealed class Result<out T> {
     data class Success<T>(val data: T) : Result<T>()
     data class Error(val exception: Throwable) : Result<Nothing>()
@@ -235,8 +235,39 @@ suspend fun getUser(): Result<User> {
 ```
 👉 💡 重点：
 
-> ❗Data layer 不关心 UI
-> ❗只负责“把异常变成统一结构”
+>❗Data layer 不关心 UI
+>
+>❗只负责“把异常变成统一结构”
+
+🧠 三、那 HTTP error / backend error 怎么办？
+
+👉 这里你可以升级一下👇
+
+🎯 更专业写法
+```kotlin
+sealed class AppError {
+    object Network : AppError()
+    object Unauthorized : AppError()
+    data class Server(val code: Int, val message: String) : AppError()
+}
+sealed class Result<out T> {
+    data class Success<T>(val data: T) : Result<T>()
+    data class Error(val error: AppError) : Result<Nothing>()
+}
+```
+👉 然后在 Repository 里 mapping：
+```kotlin
+catch (e: IOException) {
+    Result.Error(AppError.Network)
+}
+catch (e: HttpException) {
+    Result.Error(AppError.Server(e.code(), e.message()))
+}
+```
+
+👉 💥 这一层完成了：
+
+> 👉 “技术错误 → 业务可理解错误”
 
 
 
