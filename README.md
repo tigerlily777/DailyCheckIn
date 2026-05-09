@@ -67,6 +67,8 @@ May 5 - 6 - [generic type](https://github.com/tigerlily777/DailyCheckIn/blob/mai
 
 May 7 
 
+May 9 - AI
+
 
 
 
