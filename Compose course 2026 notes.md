@@ -113,6 +113,9 @@ When name value changes, it will trigger recompostion, during recomposition, val
 - Button:
     - onclick
     - Text
+- Column/LazyColumn
+- Row/LazyRow
+- 
 
 ### 1.18 Architect - screens/pages
 **activity**
