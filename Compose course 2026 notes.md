@@ -113,9 +113,15 @@ When name value changes, it will trigger recompostion, during recomposition, val
 - Button:
     - onclick
     - Text
-- Column/LazyColumn
-- Row/LazyRow
-- 
+- Column
+- Row
+- LazyColumn/LazyRow:
+    - Item 定义特殊item
+    - Items
+    - Modifier.verticalScroll/horizontalScroll
+ 
+### 1.6 Customised Composables
+
 
 ### 1.18 Architect - screens/pages
 **activity**
