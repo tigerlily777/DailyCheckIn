@@ -103,6 +103,17 @@ What if I move ```val name = mutableStateOf("Tiger")`` inside of the Box composa
 
 When name value changes, it will trigger recompostion, during recomposition, val name is created again. This is why if move name declaration into composable, it will not change the name.
 
+### 1.5 Common composables
+
+- Text
+- Image:
+    - painterResource -> DrawableRes
+    - contentDescription
+- Icon: apply tint color to assets
+- Button:
+    - onclick
+    - Text
+
 ### 1.18 Architect - screens/pages
 **activity**
 
