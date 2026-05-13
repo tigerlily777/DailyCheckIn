@@ -71,7 +71,7 @@ May 9 - AI
 
 May 11 - 1.5 Common composables
 
-May 13
+May 13 - 1.6 customised composables
 
 
 
